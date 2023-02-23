@@ -12,14 +12,14 @@ class User {
        WHERE emailAdd = '${emailAdd}';
        `;
        db.query(strQry, async (err, data) => {
-          if(err) throw err;
+        //   if(err) throw err;
           if((!data.length) || (data == null)) {
             res.status(401).json({
                 err : 'you have provided a wrong email'
             });
           } else {
             await compare(userPass, data[0].userPass, (cErr, cResult) => {
-                if(cErr) throw cErr;
+                // if(cErr) throw cErr;
                 const jwToken = createToken(
                     {
                         emailAdd, userPass
@@ -54,7 +54,11 @@ class User {
         `;
         //db
         db.query(strQry, (err, data)=>{
-            if(err) throw err;
+            if(err) {
+                res.status(400).json({
+                    err : 'hi'
+                })
+            }
             else res.status(200).json( 
                 {results: data} );
         })
@@ -70,7 +74,12 @@ class User {
         //db
         db.query(strQry,[req.params.id], 
             (err, data)=>{
-            if(err) throw err; 
+            // if(err) throw err; 
+            if(err) {
+                res.status(400).json({
+                    err : 'hi'
+                })
+            }
             else res.status(200).json( 
                 {results: data} );
         })
@@ -82,7 +91,7 @@ class User {
         let detail = req.body;
         // Hashing user password
         detail.userPass = await 
-        hash(detail.userPass, 15);
+        hash(detail.userPass, 10);
         // This information will be used for authentication.
         let user = {
             emailAdd: detail.emailAdd,
@@ -92,7 +101,9 @@ class User {
         const strQry = `INSERT INTO Users SET ?;`;
         db.query(strQry, [detail], (err)=> {
             if(err) {
-                res.status(401).json({err});
+                res.status(400).json({
+                    err : 'hi wrong create'
+                })
             }else {
                 // Create a token
                 const jwToken = createToken(user);
@@ -153,7 +164,7 @@ class Product {
         FROM products
         WHERE id = ?;`;
         db.query(strQry, [req.params.id], (err, results)=> {
-            if(err) throw err;
+            // if(err) throw err;
             res.status(200).json({results: results})
         });
 
