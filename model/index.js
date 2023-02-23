@@ -46,18 +46,13 @@ class User {
   fetchUsers(req, res) {
     // lastName, gender, cellphoneNumber, emailAdd, userRole, userProfile, joinDate, cart
     const strQry = `
-        SELECT userID, firstName, lastName
+        SELECT userID, firstName, lastName, gender, cellphoneNumber, emailAdd, userRole, userProfile, joinDate, cart
         FROM Users;
         `;
     //db
     db.query(strQry, (err, data) => {
-      if (err) {
-        res.status(400).json({
-          err,
-        });
-      } else {
-        res.status(200).json({ results: data });
-      }
+      if (err) throw err;
+      else res.status(200).json({ results: data });
     });
   }
 
